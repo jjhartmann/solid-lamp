@@ -6,10 +6,12 @@
 #define SORTABLECHALLENGEREPO_ERESOLUTION_H
 
 #include <string>
+#include <vector>
 
-class Document;
-class ListingObject;
-class StringMatcher;
+#include "ListingObject.h"
+#include "StringMatcher.h"
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
 
 using namespace std;
 
@@ -25,14 +27,13 @@ public:
 
     // Write the entity resolution result to JSON format.
     //
-    // IN: in_FileName      the filename of the docuemtn to write.
+    // IN: in_FileName      the filename of the document to write.
     void writeJSON();
 
 private:
-    Document *mResolved; // OWN
-    ListingObject *mListing; // OWN
-    ListingObject *mProduct; // OWN
-    StringMatcher *mMatcher; // OWN
+    vector<rapidjson::Document*> mResolved; // OWN
+    ListingObject<ManufacturerMatcher> mListing;
+    ListingObject<ManufacturerMatcher> mProduct;
 };
 
 
