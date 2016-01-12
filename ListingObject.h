@@ -5,18 +5,24 @@
 #ifndef SORTABLECHALLENGEREPO_LISTINGOBJECT_H
 #define SORTABLECHALLENGEREPO_LISTINGOBJECT_H
 
-#include <unordered_set>
+#include <unordered_map>
 
 #include "ListingManufacturer.h"
+#include "StringMatcher.h"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
 using namespace std;
 
-
+template <class T>
 class ListingObject
 {
-    ListingObject();
+    // Constructor: Initialize the List Object
+    //
+    // IN: *in_matcher      Pointer to a matcher object for
+    //                      discriminating against manufacturer
+    //                      strings.
+    ListingObject(StringMatcher<T> *in_matcher);
     ~ListingObject();
 
 
@@ -48,8 +54,8 @@ class ListingObject
 
 private:
     // Private Variables
-    unordered_set<ListingManufacturer*> mManufacturerList;
-
+    unordered_map<ListingManufacturer*> mManufacturerList;
+    StringMatcher<T> *mMMatcher; // OWN
 
 };
 
