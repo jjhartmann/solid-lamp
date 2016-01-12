@@ -41,7 +41,7 @@ public:
 private:
     // Private Variables
     string mManufacturerName;
-    vector<rapidjson::Document*> mListings; // OWNAdd 
+    vector<rapidjson::Document*> mListings; // OWN
 
 };
 
