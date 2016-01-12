@@ -36,7 +36,9 @@ class ManufacturerMatcher
 public:
     // Using a KB, look up and match against known manufacturers.
     string operator()(string str)
-    {}
+    {
+        return str;
+    }
 };
 
 
