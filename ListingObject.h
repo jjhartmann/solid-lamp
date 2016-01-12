@@ -94,6 +94,7 @@ void ListingObject<T>::add(rapidjson::Document *in_d)
     if (!manufacturer)
     {
         manufacturer = new ListingManufacturer(res);
+        mManufacturerList[res] = manufacturer;
     }
 
     manufacturer->add(in_d);
