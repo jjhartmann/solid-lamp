@@ -43,6 +43,18 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
 }
 
 
+// Deconstructor
+EResolution::~EResolution()
+{
+    for (Document *d : mResolved)
+    {
+        if (d)
+        {
+            delete d;
+        }
+    }
+}
+
 // Write the entity resolution result to JSON format.
 //
 // IN: in_FileName      the filename of the docuemtn to write.

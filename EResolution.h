@@ -27,6 +27,8 @@ public:
     //
     EResolution(string in_ListingPath, string in_ProductPath);
 
+    ~EResolution();
+
     // Write the entity resolution result to JSON format.
     //
     // IN: in_FileName      the filename of the document to write.
