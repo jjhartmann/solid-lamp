@@ -9,9 +9,11 @@
 #include <vector>
 
 #include "ListingObject.h"
-#include "StringMatcher.h"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
+
+#include "StringMatcher.h"
+#include "ListingObject.h"
 
 using namespace std;
 

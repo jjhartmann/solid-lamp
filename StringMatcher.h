@@ -13,15 +13,19 @@ template <typename FuncType>
 class StringMatcher
 {
 public:
-    StringMatcher(FuncType in_matcher);
-    bool match(string str1, string str2);
+    StringMatcher()
+    {
+
+    }
+
+    bool match(string str1, string str2)
+    {
+
+    }
 
 private:
     FuncType mMatcher;
 };
-
-
-#endif //SORTABLECHALLENGEREPO_STRINGMATCHER_H
 
 
 ///////////////////////////////////////////////////////////////
@@ -30,7 +34,8 @@ private:
 class ManufacturerMatcher
 {
 public:
-    bool operator()(string str1, string str2);
+    bool operator()(string str1, string str2)
+    {}
 };
 
 
@@ -40,5 +45,8 @@ public:
 class ProductMatcher
 {
 public:
-    bool operator()(string str1, string str2);
+    bool operator()(string str1, string str2)
+    {}
 };
+
+#endif //SORTABLECHALLENGEREPO_STRINGMATCHER_H
