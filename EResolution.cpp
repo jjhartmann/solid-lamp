@@ -14,9 +14,7 @@ using namespace rapidjson;
 // IN: in_path      takes a path to the product data file.
 // IN: in_path      takes a path to the listings data file.
 //
-EResolution::EResolution(string in_ListingPath, string in_ProductPath) :
-    mListing(new StringMatcher<ManufacturerMatcher>()),
-    mProduct(new StringMatcher<ManufacturerMatcher>())
+EResolution::EResolution(string in_ListingPath, string in_ProductPath)
 {
     // Get and load the files into a buffer stream.
     ifstream inListingFile(in_ListingPath.c_str());
