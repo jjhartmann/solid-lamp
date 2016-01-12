@@ -27,8 +27,14 @@ class ListingObject
     // Reset the counter for the Manufacturer to start at zero.
     void resetManufacturerItr();
 
-    // Iterate to the next manufacurer in the list.
-    void getManufacturerNext();
+    // Iterate to the next manufacturer in the list.
+    void nextManufacturer();
+
+    // Iterate to the next listing;
+    void operator++ ();
+
+    // Get the name of the current manufacturer. 
+    string getManufacturerName();
 
     // Returns the number of Manufacturers.
     int getManufacturerCount();
