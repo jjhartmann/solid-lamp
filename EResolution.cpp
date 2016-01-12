@@ -5,6 +5,7 @@
 #include "EResolution.h"
 
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 using namespace rapidjson;
@@ -16,9 +17,14 @@ using namespace rapidjson;
 //
 EResolution::EResolution(string in_ListingPath, string in_ProductPath)
 {
+    cout << in_ListingPath << endl;
+
     // Get and load the files into a buffer stream.
-    ifstream inListingFile(in_ListingPath.c_str());
-    ifstream inProductFile(in_ProductPath.c_str());
+    ifstream inListingFile(in_ListingPath.c_str(), ifstream::in);
+    ifstream inProductFile(in_ProductPath.c_str(), ifstream::in);
+
+    if (!inListingFile) return;
+    if (!inProductFile) return;
 
     // Get json document and build store listings
     string jsonStr;
