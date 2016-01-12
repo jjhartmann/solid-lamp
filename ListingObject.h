@@ -15,17 +15,14 @@
 
 
 using namespace std;
+using namespace rapidjson;
 
 template <class T>
 class ListingObject
 {
 public:
     // Constructor: Initialize the List Object
-    //
-    // IN: *in_matcher      Pointer to a matcher object for
-    //                      discriminating against manufacturer
-    //                      strings.
-    ListingObject(StringMatcher<T> *in_matcher);
+    ListingObject();
     ~ListingObject();
 
 
@@ -58,7 +55,8 @@ public:
 private:
     // Private Variables
     unordered_map<string, ListingManufacturer*> mManufacturerList;
-    StringMatcher<T> *mMMatcher; // OWN
+    unordered_map<string, ListingManufacturer*>::iterator mItr;
+    T *mMMatcher; // OWN
 
 };
 
@@ -66,15 +64,82 @@ private:
 // Impl: ListObject
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-ListingObject<T>::ListingObject(StringMatcher<T> *in_matcher) :
-        mMMatcher(in_matcher)
+ListingObject<T>::ListingObject() :
+        mMMatcher(new T()),
+        mItr(mManufacturerList.begin())
 { }
 
 
+///////////////////////////////////////////////////////////////////////
 template <class T>
 ListingObject<T>::~ListingObject()
 { }
 
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+void ListingObject<T>::add(rapidjson::Document *in_d)
+{
+    // Determine what manufacturer the document is and place in container
+    Value& v = (*in_d)["manufacturer"];
+    string res = (*mMMatcher)(v.GetString());
+
+    ListingManufacturer *manufacturer = mManufacturerList[res];
+
+    if (!manufacturer)
+    {
+        manufacturer = new ListingManufacturer(res);
+    }
+
+    manufacturer->add(in_d);
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+void ListingObject<T>::resetManufacturerItr()
+{
+    mItr = mManufacturerList.begin();
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+void ListingObject<T>::nextManufacturer()
+{
+    mItr++;
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+void ListingObject<T>::operator++ ()
+{
+    mItr->second++;
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+string ListingObject<T>::getManufacturerName()
+{
+    return mItr->first;
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+int ListingObject<T>::getManufacturerCount()
+{
+    return mManufacturerList.size();
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+rapidjson::Value& ListingObject<T>::operator[] (string str)
+{
+    return (*(mItr->second))[str];
+}
+
 #endif //SORTABLECHALLENGEREPO_LISTINGOBJECT_H
-
-
