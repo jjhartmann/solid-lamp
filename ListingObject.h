@@ -7,16 +7,19 @@
 
 #include <unordered_map>
 
-#include "ListingManufacturer.h"
-#include "StringMatcher.h"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
+
+#include "ListingManufacturer.h"
+#include "StringMatcher.h"
+
 
 using namespace std;
 
 template <class T>
 class ListingObject
 {
+public:
     // Constructor: Initialize the List Object
     //
     // IN: *in_matcher      Pointer to a matcher object for
@@ -54,10 +57,24 @@ class ListingObject
 
 private:
     // Private Variables
-    unordered_map<ListingManufacturer*> mManufacturerList;
+    unordered_map<string, ListingManufacturer*> mManufacturerList;
     StringMatcher<T> *mMMatcher; // OWN
 
 };
 
+///////////////////////////////////////////////////////////////////////
+// Impl: ListObject
+///////////////////////////////////////////////////////////////////////
+template <class T>
+ListingObject<T>::ListingObject(StringMatcher<T> *in_matcher) :
+        mMMatcher(in_matcher)
+{ }
+
+
+template <class T>
+ListingObject<T>::~ListingObject()
+{ }
 
 #endif //SORTABLECHALLENGEREPO_LISTINGOBJECT_H
+
+
