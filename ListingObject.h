@@ -21,8 +21,8 @@ class ListingObject
 
     // Add a document file to the listings object.
     //
-    // IN: in_d         The json object to be added.
-    void add(rapidjson::Document in_d);
+    // IN: *in_d         The json object to be added. DON'T OWN
+    void add(rapidjson::Document *in_d);
 
     // Reset the counter for the Manufacturer to start at zero.
     void resetManufacturerItr();
@@ -33,7 +33,7 @@ class ListingObject
     // Iterate to the next listing;
     void operator++ ();
 
-    // Get the name of the current manufacturer. 
+    // Get the name of the current manufacturer.
     string getManufacturerName();
 
     // Returns the number of Manufacturers.
