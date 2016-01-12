@@ -34,7 +34,8 @@ private:
 class ManufacturerMatcher
 {
 public:
-    bool operator()(string str1, string str2)
+    // Using a KB, look up and match against known manufacturers.
+    string operator()(string str)
     {}
 };
 
