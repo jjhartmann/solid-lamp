@@ -27,12 +27,12 @@ public:
     // Retrieve the data from the current JSON object
     //
     // IN: in_memberName        THe name of the member to retrieve.
-    rapidjson::Value& operator[] (string in_memberName);
+    rapidjson::Value& operator[] (const string in_memberName);
 
     // Reset the Document iterator to zero
     void resetDocumentItr();
 
-    // Increment the Listings iterator by one.
+    // Increment the Document iterator by one.
     void operator++ ();
 
     // Get the name of this manufacturer
@@ -42,6 +42,7 @@ private:
     // Private Variables
     string mManufacturerName;
     vector<rapidjson::Document*> mListings; // OWN
+    vector<rapidjson::Document*>::iterator mItr;
 
 };
 
