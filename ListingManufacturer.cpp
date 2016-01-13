@@ -35,10 +35,17 @@ void ListingManufacturer::add(rapidjson::Document *in_d)
 // Retrieve the data from the current JSON object
 //
 // IN: in_memberName        THe name of the member to retrieve.
-rapidjson::Value &ListingManufacturer::operator[](const string in_memberName)
+rapidjson::Value* ListingManufacturer::operator[](const string in_memberName)
 {
-    rapidjson::Document *d = *mItr;
-    return (*d)[in_memberName.c_str()];
+    rapidjson::Document *d =  (*mItr);
+
+    if (d->HasMember(in_memberName.c_str()))
+    {
+        return &(*d)[in_memberName.c_str()];
+    }
+
+    return nullptr;
+
 }
 
 // Reset the Document iterator to zero
@@ -50,11 +57,22 @@ void ListingManufacturer::resetDocumentItr()
 // Increment the Document iterator by one.
 void ListingManufacturer::operator++()
 {
-    mItr++;
+    ++mItr;
 }
 
 // Get the name of this manufacturer
 string ListingManufacturer::getName()
 {
     return mManufacturerName;
+}
+
+// Check to see if iterator is valid
+bool ListingManufacturer::isValid()
+{
+    if (mItr != mListings.end())
+    {
+        return true;
+    }
+
+    return false;
 }

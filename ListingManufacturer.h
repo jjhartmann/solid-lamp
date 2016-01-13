@@ -27,13 +27,16 @@ public:
     // Retrieve the data from the current JSON object
     //
     // IN: in_memberName        THe name of the member to retrieve.
-    rapidjson::Value& operator[] (const string in_memberName);
+    rapidjson::Value* operator[] (const string in_memberName);
 
     // Reset the Document iterator to zero
     void resetDocumentItr();
 
     // Increment the Document iterator by one.
     void operator++ ();
+
+    // Check to see if iterator is valid
+    bool isValid();
 
     // Get the name of this manufacturer
     string getName();
