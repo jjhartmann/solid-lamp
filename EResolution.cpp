@@ -46,6 +46,44 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
     }
 
     // Initiate Entity Resolution.
+    StringMatcher<ProductMatcher> matcher;
+
+    mListing.resetManufacturerItr();
+    mProduct.resetManufacturerItr();
+
+    while (mProduct.isValid())
+    {
+        // Compare against the listings.
+        if (mListing.findManufacturer(mProduct.getManufacturerName()))
+        {
+            do
+            {
+                // Collect information from json object
+                Value *pName = mProduct["product_name"];
+                Value *model = mProduct["model"];
+                Value *family = mProduct["family"];
+
+                // Iterator throught the product listing for matches.
+                do
+                {
+                    // Get the title from each listing and compare with product.
+                    Value *title = mListing["title"];
+                    bool res = matcher.match(title->GetString(), model->GetString());
+
+                    // If match, add to resolved
+                    if(res)
+                    {
+                        ; // TODO Add results to the resolved list
+                    }
+                }
+                while (++mListing); // Next listing in manufacturer group
+            }
+            while (++mProduct); // next product in manufacturer group
+        }
+
+        // Go to the next manufacturer
+        mProduct.nextManufacturer();
+    }
 }
 
 
