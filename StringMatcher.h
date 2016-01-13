@@ -6,6 +6,7 @@
 #define SORTABLECHALLENGEREPO_STRINGMATCHER_H
 
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -20,7 +21,7 @@ public:
 
     bool match(string str1, string str2)
     {
-
+        return mMatcher(str1, str2);
     }
 
 private:
@@ -37,6 +38,7 @@ public:
     // Using a KB, look up and match against known manufacturers.
     string operator()(string str)
     {
+        transform(str.begin(), str.end(), str.begin(), ::tolower);
         return str;
     }
 };
@@ -49,7 +51,9 @@ class ProductMatcher
 {
 public:
     bool operator()(string str1, string str2)
-    {}
+    {
+        return str1 == str2;
+    }
 };
 
 #endif //SORTABLECHALLENGEREPO_STRINGMATCHER_H
