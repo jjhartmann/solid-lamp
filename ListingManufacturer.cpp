@@ -76,3 +76,11 @@ bool ListingManufacturer::isValid()
 
     return false;
 }
+
+// Get a copy of the current document;
+rapidjson::Document ListingManufacturer::getCopy()
+{
+    rapidjson::Document dd;
+    dd.Accept(**mItr);
+    return dd;
+}

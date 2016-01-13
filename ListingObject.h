@@ -57,6 +57,9 @@ public:
     // IN: in_str           The name of the member to get.
     rapidjson::Value* operator[] (string str);
 
+    // Get a copy of the current document
+    rapidjson::Document getCopy();
+
 
 private:
     // Private Variables
@@ -145,12 +148,15 @@ void ListingObject<T>::nextManufacturer()
 template <class T>
 bool ListingObject<T>::operator++ ()
 {
+    ++(*(mItr->second));
+
     if ((mItr->second)->isValid())
     {
-        ++(*(mItr->second));
         return true;
     }
 
+    // If Listing Manufacturer is in invalid state, reset.
+    (mItr->second)->resetDocumentItr();
     return false;
 }
 
@@ -193,5 +199,16 @@ rapidjson::Value* ListingObject<T>::operator[] (string str)
 {
     return (*(mItr->second))[str];
 }
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+rapidjson::Document ListingObject<T>::getCopy()
+{
+    return (mItr->second)->getCopy();
+}
+
+
+
 
 #endif //SORTABLECHALLENGEREPO_LISTINGOBJECT_H

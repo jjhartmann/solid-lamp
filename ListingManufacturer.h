@@ -41,6 +41,9 @@ public:
     // Get the name of this manufacturer
     string getName();
 
+    // Return a copy of the current docuement
+    rapidjson::Document getCopy();
+
 private:
     // Private Variables
     string mManufacturerName;

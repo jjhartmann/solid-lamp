@@ -63,6 +63,17 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 Value *model = mProduct["model"];
                 Value *family = mProduct["family"];
 
+                // Document to be used to build listing for product
+                Document d;
+                d.SetObject();
+
+                Value v(kStringType);
+                v.SetString(pName->GetString(), pName->GetStringLength());
+
+                d.AddMember("product_name", v, d.GetAllocator());
+
+                Value a(kArrayType);
+
                 // Iterator throught the product listing for matches.
                 do
                 {
@@ -73,7 +84,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                     // If match, add to resolved
                     if(res)
                     {
-                        ; // TODO Add results to the resolved list
+                        a.PushBack(mListing.getCopy(), d.GetAllocator());
                     }
                 }
                 while (++mListing); // Next listing in manufacturer group
