@@ -37,8 +37,14 @@ public:
     // Iterate to the next manufacturer in the list.
     void nextManufacturer();
 
-    // Iterate to the next listing;
-    void operator++ ();
+    // It returns true if mItr is at end.
+    bool isValid();
+
+    // Iterate to the next listing in the manufacturer;
+    bool operator++ ();
+
+    // Find the manufacturer and set iterator to point to it.
+    bool findManufacturer(string in_mName);
 
     // Get the name of the current manufacturer.
     string getManufacturerName();
@@ -49,7 +55,7 @@ public:
     // Get the value of a Member in the document
     //
     // IN: in_str           The name of the member to get.
-    rapidjson::Value& operator[] (string str);
+    rapidjson::Value* operator[] (string str);
 
 
 private:
@@ -106,6 +112,19 @@ template <class T>
 void ListingObject<T>::resetManufacturerItr()
 {
     mItr = mManufacturerList.begin();
+
+    if (mItr != mManufacturerList.end())
+    {
+        mItr->second->resetDocumentItr();
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+bool ListingObject<T>::isValid()
+{
+    return mItr != mManufacturerList.end();
 }
 
 
@@ -114,14 +133,41 @@ template <class T>
 void ListingObject<T>::nextManufacturer()
 {
     mItr++;
+
+    if (mItr != mManufacturerList.end())
+    {
+        mItr->second->resetDocumentItr();
+    }
 }
 
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-void ListingObject<T>::operator++ ()
+bool ListingObject<T>::operator++ ()
 {
-    mItr->second++;
+    if ((mItr->second)->isValid())
+    {
+        ++(*(mItr->second));
+        return true;
+    }
+
+    return false;
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+bool ListingObject<T>::findManufacturer(string in_mName)
+{
+    mItr = mManufacturerList.find(in_mName);
+
+    if (mItr != mManufacturerList.end())
+    {
+        (mItr->second)->resetDocumentItr();
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -143,7 +189,7 @@ int ListingObject<T>::getManufacturerCount()
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-rapidjson::Value& ListingObject<T>::operator[] (string str)
+rapidjson::Value* ListingObject<T>::operator[] (string str)
 {
     return (*(mItr->second))[str];
 }
