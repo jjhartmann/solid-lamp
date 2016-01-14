@@ -36,6 +36,8 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
         mListing.add(d);
     }
 
+    // invoke Store listings optimization
+
     // Get json document and build the product listings
     while (getline(inProductFile, jsonStr))
     {

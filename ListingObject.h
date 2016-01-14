@@ -96,7 +96,7 @@ void ListingObject<T>::add(rapidjson::Document *in_d)
 {
     // Determine what manufacturer the document is and place in container
     Value& v = (*in_d)["manufacturer"];
-    string res = (*mMMatcher)(v.GetString());
+    string res = (*mMMatcher)(v.GetString(), mManufacturerList);
 
     ListingManufacturer *manufacturer = mManufacturerList[res];
 
