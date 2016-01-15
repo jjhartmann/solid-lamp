@@ -4,8 +4,42 @@
 
 #include "StringMatcher.h"
 
-// Map KB
-unordered_map<string, vector<string> > KB::map =
+/////////////////////////////////////////////////////////////
+// Static Invalid Char Map
+unordered_set<char> KB::invalidCharMap =
+        {
+                ':',
+                '[',
+                ']',
+                ';',
+                '\'',
+                '\"',
+                '-',
+                '_',
+                '+',
+                '=',
+                '|',
+                '/',
+                '?',
+                '<',
+                '>',
+                '.',
+                ',',
+                '!',
+                '@',
+                '#',
+                '$',
+                '%',
+                '^',
+                '*',
+                '(',
+                ')',
+                '~',
+        };
+
+/////////////////////////////////////////////////////////////
+// Static Manufacturer KB MAP
+unordered_map<string, vector<string> > KB::manufacturerMap =
         {
                 {"contax",      {"contax", "eddded"}},
                 {"sanyo",       {"sanyo", "eddded"}},
