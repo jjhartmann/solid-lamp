@@ -41,6 +41,9 @@ public:
     // Get the name of this manufacturer
     string getName();
 
+    // Merge a listings this this.
+    void merge(ListingManufacturer *in_list);
+
     // Return a copy of the current docuement
     rapidjson::Document getCopy();
 

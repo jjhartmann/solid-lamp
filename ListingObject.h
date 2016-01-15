@@ -31,6 +31,9 @@ public:
     // IN: *in_d         The json object to be added. DON'T OWN
     void add(rapidjson::Document *in_d);
 
+    // Invokes a rehashing of the list, performing deduplication.
+    void optimize();
+
     // Reset the counter for the Manufacturer to start at zero.
     void resetManufacturerItr();
 
@@ -87,6 +90,11 @@ ListingObject<T>::~ListingObject()
     {
         delete mMMatcher;
     }
+
+    for (auto &itr : mManufacturerList)
+    {
+        delete itr.second;
+    }
 }
 
 
@@ -107,6 +115,20 @@ void ListingObject<T>::add(rapidjson::Document *in_d)
     }
 
     manufacturer->add(in_d);
+}
+
+
+///////////////////////////////////////////////////////////////////////
+template <class T>
+void ListingObject<T>::optimize()
+{
+    // Iterator through the entire mManufacturerList and perform deduplication.
+    unordered_map<string, ListingManufacturer*>::iterator itr = mManufacturerList.begin();
+    while (itr != mManufacturerList.end())
+    {
+        (*mMMatcher)(itr, mManufacturerList);
+        ++itr;
+    }
 }
 
 

@@ -66,6 +66,13 @@ string ListingManufacturer::getName()
     return mManufacturerName;
 }
 
+// Merge a listings with this
+void ListingManufacturer::merge(ListingManufacturer *in_list)
+{
+    mListings.insert(mListings.end(), in_list->mListings.begin(), in_list->mListings.end());
+}
+
+
 // Check to see if iterator is valid
 bool ListingManufacturer::isValid()
 {
@@ -84,3 +91,4 @@ rapidjson::Document ListingManufacturer::getCopy()
     dd.Accept(**mItr);
     return dd;
 }
+

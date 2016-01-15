@@ -60,20 +60,13 @@ class ManufacturerMatcher
 {
 public:
     // Using a KB, look up and match against known manufacturers.
-    string operator()(string str, unordered_map<string, ListingManufacturer*> &map, bool opt = false)
+    string operator()(string str, unordered_map<string, ListingManufacturer*> &map)
     {
-        // bool opt: reverses the look up, Single word first and whole phrase last.
-
         // Convert string to lower case
         transform(str.begin(), str.end(), str.begin(), ::tolower);
         initString(str);
 
-        unordered_map<string, ListingManufacturer *>::iterator mIter = map.end();
-
-        if (!opt)
-        {
-            mIter = map.find(str);
-        }
+        unordered_map<string, ListingManufacturer *>::iterator mIter = map.find(str);
 
         while (mIter == map.end() && !isEnd())
         {
@@ -86,15 +79,32 @@ public:
         if (mIter != map.end())
         {
             str = mIter->first;
-
-            // Delete whole word match if single
-            if (opt)
-            {
-
-            }
         }
 
         return str;
+    }
+
+    // Optimize the map with word look-up
+    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, unordered_map<string, ListingManufacturer*> &map)
+    {
+        initString(in_cIter->first);
+
+        string tmp1 = in_cIter->first;
+
+        unordered_map<string, ListingManufacturer*>::iterator itr = map.end();
+        while (itr == map.end() && !isEnd())
+        {
+            // TODO: REMOVE TEMP.
+            string tmp2 = nextWord();
+            itr = map.find(tmp2);
+        }
+
+        // If candidate is found. Transfer all data from in_cIter to itr.
+        if (itr != map.end() && *itr != *in_cIter)
+        {
+            itr->second->merge(in_cIter->second);
+            in_cIter = map.erase(in_cIter);
+        }
     }
 
 private:
