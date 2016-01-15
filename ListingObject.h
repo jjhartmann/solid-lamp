@@ -126,8 +126,19 @@ void ListingObject<T>::optimize()
     unordered_map<string, ListingManufacturer*>::iterator itr = mManufacturerList.begin();
     while (itr != mManufacturerList.end())
     {
-        (*mMMatcher)(itr, mManufacturerList);
-        ++itr;
+        bool del = false;
+        (*mMMatcher)(itr, mManufacturerList, del);
+
+        if (del)
+        {
+            // If the manufacturer List is empty or moved. Delete.
+            delete itr->second;
+            itr = mManufacturerList.erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
     }
 }
 
