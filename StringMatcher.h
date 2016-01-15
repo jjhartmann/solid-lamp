@@ -24,6 +24,7 @@ class KB
 public:
     static unordered_map< string, vector<string> > manufacturerMap;
     static unordered_set<char> invalidCharMap;
+    static unordered_set<string> ambiguousWordMap;
 };
 
 ///////////////////////////////////////////////////////////////
@@ -54,7 +55,7 @@ public:
             in_str[i] = tolower(c);
 
             unordered_set<char>::iterator itr =  KB::invalidCharMap.find(in_str[i]);
-            if (itr != KB::invalidCharMap.end())
+            if (itr != KB::invalidCharMap.end() || (int) c < 32)
             {
                 in_str.erase(i, 1);
                 --i;
@@ -105,7 +106,18 @@ public:
         {
             // Try to find words in map
             string word = nextWord();
-            mIter = map.find(word);
+
+            // Check for ambiguous words. ie Digital, camera etc...
+            unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
+            if (sitr != KB::ambiguousWordMap.end())
+            {
+                // Close the gap.
+                str = eraseBeforeAtIndex(-1);
+            }
+            else
+            {
+                mIter = map.find(word);
+            }
         }
 
         // Add to map
@@ -134,16 +146,27 @@ public:
                 // Iterate through each word
                 unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
 
-                string tmp2;
+                string word;
                 while (itr == map.end() && !isEnd())
                 {
                     // TODO: REMOVE TEMP.
-                    tmp2 = nextWord();
-                    itr = map.find(tmp2);
+                    word = nextWord();
+
+                    unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
+                    if (sitr != KB::ambiguousWordMap.end())
+                    {
+                        // Close the gap.
+                        eraseBeforeAtIndex(-1);
+                    }
+                    else
+                    {
+                        itr = map.find(word);
+                    }
                 }
 
                 // If match, move document to new location
-                if (itr != map.end())
+                
+                if (itr != map.end() && *itr != *in_cIter)
                 {
                     // Move iterates by one
                     itr->second->add(in_cIter->second->move());
@@ -224,6 +247,35 @@ private:
 
         return word;
     }
+
+    // erase at and before index " "
+    string eraseBeforeAtIndex(int offset, int len = 1)
+    {
+        bool resetStr = false;
+
+        // Don't erase last char. 
+        if (mIndex + offset < mTmpStr.length() - 1)
+        {
+            mTmpStr.erase(mIndex + offset, len);  
+            resetStr = true;
+        }
+
+        // Find previous " " and erase
+        int i = mTmpStr.rfind(' ', mIndex);
+        if (i != string::npos)
+        {
+            mTmpStr.erase(i, 1);
+            resetStr = true;
+        }
+
+        if (resetStr)
+        {
+            mIndex = 0;
+        }
+
+        return mTmpStr;
+    }
+
 
     // Check if end of string
     bool isEnd()

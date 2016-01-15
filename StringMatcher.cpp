@@ -37,6 +37,14 @@ unordered_set<char> KB::invalidCharMap =
                 '~',
         };
 
+
+/////////////////////////////////////////////////////////////
+// Static Invalid Char Map
+unordered_set<string> KB::ambiguousWordMap =
+{
+    "digital",
+};
+
 /////////////////////////////////////////////////////////////
 // Static Manufacturer KB MAP
 unordered_map<string, vector<string> > KB::manufacturerMap =
