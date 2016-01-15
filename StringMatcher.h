@@ -8,6 +8,7 @@
 #include <string>
 #include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "ListingManufacturer.h"
@@ -21,15 +22,47 @@ using namespace std;
 class KB
 {
 public:
-    static bool ManufacturerCheck(string str)
-    {
-
-    }
-
-private:
-    static unordered_map< string, vector<string> > map;
+    static unordered_map< string, vector<string> > manufacturerMap;
+    static unordered_set<char> invalidCharMap;
 };
 
+///////////////////////////////////////////////////////////////
+// TOLower Functor
+///////////////////////////////////////////////////////////////
+class Normalize
+{
+public:
+    // For use in STD algorithms
+    char operator() (char c)
+    {
+        c = tolower(c);
+        unordered_set<char>::iterator itr =  KB::invalidCharMap.find(c);
+        if (itr != KB::invalidCharMap.end())
+        {
+            c = ' ';
+        }
+
+        return c;
+    }
+
+    // Process a string and perform normalization
+    void processString(string &in_str)
+    {
+        for (int i = 0; i < in_str.length(); ++i)
+        {
+            char c = in_str[i];
+            in_str[i] = tolower(c);
+
+            unordered_set<char>::iterator itr =  KB::invalidCharMap.find(in_str[i]);
+            if (itr != KB::invalidCharMap.end())
+            {
+                in_str.erase(i, 1);
+                --i;
+            }
+
+        }
+    }
+};
 
 ///////////////////////////////////////////////////////////////
 // Class String Matcher
@@ -63,7 +96,7 @@ public:
     string operator()(string str, unordered_map<string, ListingManufacturer*> &map)
     {
         // Convert string to lower case
-        transform(str.begin(), str.end(), str.begin(), ::tolower);
+        norm.processString(str);
         initString(str);
 
         unordered_map<string, ListingManufacturer *>::iterator mIter = map.find(str);
@@ -85,31 +118,81 @@ public:
     }
 
     // Optimize the map with word look-up
-    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, unordered_map<string, ListingManufacturer*> &map)
+    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, unordered_map<string, ListingManufacturer*> &map, bool &isChanged)
     {
-        initString(in_cIter->first);
-
-        string tmp1 = in_cIter->first;
-
-        unordered_map<string, ListingManufacturer*>::iterator itr = map.end();
-        while (itr == map.end() && !isEnd())
+        string tmpName = in_cIter->first;
+        if (tmpName == "" || tmpName == "camera")
         {
-            // TODO: REMOVE TEMP.
-            string tmp2 = nextWord();
-            itr = map.find(tmp2);
+            // Unknown  manufacturer. Rehash all.
+            in_cIter->second->resetDocumentItr();
+            while (in_cIter->second->isValid())
+            {
+                tmpName = (*(in_cIter->second))["title"]->GetString();
+                norm.processString(tmpName);
+                initString(tmpName);
+
+                // Iterate through each word
+                unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
+
+                string tmp2;
+                while (itr == map.end() && !isEnd())
+                {
+                    // TODO: REMOVE TEMP.
+                    tmp2 = nextWord();
+                    itr = map.find(tmp2);
+                }
+
+                // If match, move document to new location
+                if (itr != map.end())
+                {
+                    // Move iterates by one
+                    itr->second->add(in_cIter->second->move());
+                }
+                else
+                {
+                    // Create new listing based on first word.
+                    resetString();
+                    string newManu = nextWord();
+
+                    ListingManufacturer *el = new ListingManufacturer(newManu);
+                    el->add(in_cIter->second->move());
+                    map[newManu] = el;
+                }
+            }
+
+            // Delete manufacturer if empty listing.
+            if(in_cIter->second->isEmpty())
+            {
+                isChanged = true;
+            }
         }
-
-        // If candidate is found. Transfer all data from in_cIter to itr.
-        if (itr != map.end() && *itr != *in_cIter)
+        else
         {
-            itr->second->merge(in_cIter->second);
-            in_cIter = map.erase(in_cIter);
+            // Valid String, can perform bulk move.
+            initString(tmpName);
+
+            // Iterate through each word
+            unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
+            while (itr == map.end() && !isEnd())
+            {
+                // TODO: REMOVE TEMP.
+                string tmp2 = nextWord();
+                itr = map.find(tmp2);
+            }
+
+            // If candidate is found. Transfer all data from in_cIter to itr.
+            if (itr != map.end() && *itr != *in_cIter)
+            {
+                itr->second->merge(in_cIter->second);
+                isChanged = true;
+            }
         }
     }
 
 private:
     string mTmpStr;
     int mIndex;
+    Normalize norm;
 
     // Find word in list.
     void initString(string str)
