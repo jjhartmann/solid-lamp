@@ -20,6 +20,7 @@ ListingManufacturer::~ListingManufacturer()
         if (d)
         {
             delete d;
+            d = nullptr;
         }
     }
 }
@@ -39,7 +40,7 @@ rapidjson::Value* ListingManufacturer::operator[](const string in_memberName)
 {
     rapidjson::Document *d =  (*mItr);
 
-    if (d->HasMember(in_memberName.c_str()))
+    if (!d->ObjectEmpty() && d->HasMember(in_memberName.c_str()))
     {
         return &(*d)[in_memberName.c_str()];
     }
@@ -70,6 +71,7 @@ string ListingManufacturer::getName()
 void ListingManufacturer::merge(ListingManufacturer *in_list)
 {
     mListings.insert(mListings.end(), in_list->mListings.begin(), in_list->mListings.end());
+    in_list->mListings.clear();
 }
 
 
