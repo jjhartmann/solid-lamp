@@ -108,6 +108,12 @@ void ListingObject<T>::add(rapidjson::Document *in_d)
 
     ListingManufacturer *manufacturer = mManufacturerList[res];
 
+    if (res == "" || res == "camera")
+    {
+        int x = 0;
+        x += 5;
+    }
+
     if (!manufacturer)
     {
         manufacturer = new ListingManufacturer(res);
