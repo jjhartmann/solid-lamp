@@ -92,3 +92,15 @@ rapidjson::Document ListingManufacturer::getCopy()
     return dd;
 }
 
+// Move the document pointer and delete location. Moves Iterator to next.
+rapidjson::Document *ListingManufacturer::move()
+{
+    rapidjson::Document *tmp = *mItr;
+    mItr = mListings.erase(mItr);
+    return tmp;
+}
+
+bool ListingManufacturer::isEmpty()
+{
+    return mListings.empty();
+}

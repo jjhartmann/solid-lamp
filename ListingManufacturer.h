@@ -47,6 +47,12 @@ public:
     // Return a copy of the current docuement
     rapidjson::Document getCopy();
 
+    // Move the current document
+    rapidjson::Document* move();
+
+    // Check if mListings is empty
+    bool isEmpty();
+
 private:
     // Private Variables
     string mManufacturerName;
