@@ -65,167 +65,27 @@ public:
     }
 };
 
-///////////////////////////////////////////////////////////////
-// Class String Matcher
-///////////////////////////////////////////////////////////////
-template <typename FuncType>
-class StringMatcher
+class ParseString
 {
 public:
-    StringMatcher()
-    {
-        ;
-    }
-
-    bool match(string str1, string str2)
-    {
-        return mMatcher(str1, str2);
-    }
-
-private:
-    FuncType mMatcher;
-};
-
-
-///////////////////////////////////////////////////////////////
-// Functor: Manufacturer Matching
-///////////////////////////////////////////////////////////////
-class ManufacturerMatcher
-{
-public:
-    // Using a KB, look up and match against known manufacturers.
-    string operator()(string str, unordered_map<string, ListingManufacturer*> &map)
-    {
-        // Convert string to lower case
-        norm.processString(str);
-        initString(str);
-
-        unordered_map<string, ListingManufacturer *>::iterator mIter = map.find(str);
-
-        while (mIter == map.end() && !isEnd())
-        {
-            // Try to find words in map
-            string word = nextWord();
-
-            // Check for ambiguous words. ie Digital, camera etc...
-            unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
-            if (sitr != KB::ambiguousWordMap.end())
-            {
-                // Close the gap.
-                str = eraseBeforeAtIndex(-1);
-            }
-            else
-            {
-                mIter = map.find(word);
-            }
-        }
-
-        // Add to map
-        if (mIter != map.end())
-        {
-            str = mIter->first;
-        }
-
-        return str;
-    }
-
-    // Optimize the map with word look-up
-    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, unordered_map<string, ListingManufacturer*> &map, bool &isChanged)
-    {
-        string tmpName = in_cIter->first;
-        if (tmpName == "" || tmpName == "camera")
-        {
-            // Unknown  manufacturer. Rehash all.
-            in_cIter->second->resetDocumentItr();
-            while (in_cIter->second->isValid())
-            {
-                tmpName = (*(in_cIter->second))["title"]->GetString();
-                norm.processString(tmpName);
-                initString(tmpName);
-
-                // Iterate through each word
-                unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
-
-                string word;
-                while (itr == map.end() && !isEnd())
-                {
-                    // TODO: REMOVE TEMP.
-                    word = nextWord();
-
-                    unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
-                    if (sitr != KB::ambiguousWordMap.end())
-                    {
-                        // Close the gap.
-                        eraseBeforeAtIndex(-1);
-                    }
-                    else
-                    {
-                        itr = map.find(word);
-                    }
-                }
-
-                // If match, move document to new location
-                
-                if (itr != map.end() && *itr != *in_cIter)
-                {
-                    // Move iterates by one
-                    itr->second->add(in_cIter->second->move());
-                }
-                else
-                {
-                    // Create new listing based on first word.
-                    resetString();
-                    string newManu = nextWord();
-
-                    ListingManufacturer *el = new ListingManufacturer(newManu);
-                    el->add(in_cIter->second->move());
-                    map[newManu] = el;
-                }
-            }
-
-            // Delete manufacturer if empty listing.
-            if(in_cIter->second->isEmpty())
-            {
-                isChanged = true;
-            }
-        }
-        else
-        {
-            // Valid String, can perform bulk move.
-            initString(tmpName);
-
-            // Iterate through each word
-            unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
-            while (itr == map.end() && !isEnd())
-            {
-                // TODO: REMOVE TEMP.
-                string tmp2 = nextWord();
-                itr = map.find(tmp2);
-            }
-
-            // If candidate is found. Transfer all data from in_cIter to itr.
-            if (itr != map.end() && *itr != *in_cIter)
-            {
-                itr->second->merge(in_cIter->second);
-                isChanged = true;
-            }
-        }
-    }
-
-private:
-    string mTmpStr;
-    int mIndex;
-    Normalize norm;
+    ParseString() {}
 
     // Find word in list.
-    void initString(string str)
+    ParseString(string str)
     {
         mIndex = 0;
         mTmpStr = str;
     }
 
     // Reset values;
-    void resetString() { mIndex =0;}
+    void resetString(string str = "") 
+    { 
+        mIndex = 0; 
+        if (!str.empty())
+        {
+             mTmpStr = str;
+        }
+    }
 
     // Find next word;
     string nextWord()
@@ -256,7 +116,7 @@ private:
         // Don't erase last char. 
         if (mIndex + offset < mTmpStr.length() - 1)
         {
-            mTmpStr.erase(mIndex + offset, len);  
+            mTmpStr.erase(mIndex + offset, len);
             resetStr = true;
         }
 
@@ -283,6 +143,162 @@ private:
         return mIndex >= mTmpStr.length();
     }
 
+private:
+    string mTmpStr;
+    int mIndex;
+
+};
+
+///////////////////////////////////////////////////////////////
+// Class String Matcher
+///////////////////////////////////////////////////////////////
+template <typename FuncType>
+class StringMatcher
+{
+public:
+    StringMatcher()
+    {
+        ;
+    }
+
+    bool match(string str1, string str2)
+    {
+        return mMatcher(str1, str2);
+    }
+
+private:
+    FuncType mMatcher;
+};
+
+
+///////////////////////////////////////////////////////////////
+// Functor: Manufacturer Matching
+///////////////////////////////////////////////////////////////
+class ManufacturerMatcher
+{
+public:
+
+    // Using a KB, look up and match against known manufacturers.
+    string operator()(string str, unordered_map<string, ListingManufacturer*> &map)
+    {
+        // Convert string to lower case
+        norm.processString(str);
+        mString.resetString(str);
+
+        unordered_map<string, ListingManufacturer *>::iterator mIter = map.find(str);
+
+        while (mIter == map.end() && !mString.isEnd())
+        {
+            // Try to find words in map
+            string word = mString.nextWord();
+
+            // Check for ambiguous words. ie Digital, camera etc...
+            unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
+            if (sitr != KB::ambiguousWordMap.end())
+            {
+                // Close the gap.
+                str = mString.eraseBeforeAtIndex(-1);
+            }
+            else
+            {
+                mIter = map.find(word);
+            }
+        }
+
+        // Add to map
+        if (mIter != map.end())
+        {
+            str = mIter->first;
+        }
+
+        return str;
+    }
+
+    // Optimize the map with word look-up, deduplication.
+    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, unordered_map<string, ListingManufacturer*> &map, bool &isChanged)
+    {
+        string tmpName = in_cIter->first;
+        if (tmpName == "" || tmpName == "camera")
+        {
+            // Unknown  manufacturer. Rehash all.
+            in_cIter->second->resetDocumentItr();
+            while (in_cIter->second->isValid())
+            {
+                tmpName = (*(in_cIter->second))["title"]->GetString();
+                norm.processString(tmpName);
+                mString.resetString(tmpName);
+
+                // Iterate through each word
+                unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
+
+                string word;
+                while (itr == map.end() && !mString.isEnd())
+                {
+                    // TODO: REMOVE TEMP.
+                    word = mString.nextWord();
+
+                    unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
+                    if (sitr != KB::ambiguousWordMap.end())
+                    {
+                        // Close the gap.
+                        mString.eraseBeforeAtIndex(-1);
+                    }
+                    else
+                    {
+                        itr = map.find(word);
+                    }
+                }
+
+                // If match, move document to new location
+                if (itr != map.end() && *itr != *in_cIter)
+                {
+                    // Move iterates by one
+                    itr->second->add(in_cIter->second->move());
+                }
+                else
+                {
+                    // Create new listing based on first word.
+                    mString.resetString();
+                    string newManu = mString.nextWord();
+
+                    ListingManufacturer *el = new ListingManufacturer(newManu);
+                    el->add(in_cIter->second->move());
+                    map[newManu] = el;
+                }
+            }
+
+            // Delete manufacturer if empty listing.
+            if(in_cIter->second->isEmpty())
+            {
+                isChanged = true;
+            }
+        }
+        else
+        {
+            // Valid String, can perform bulk move.
+            mString.resetString(tmpName);
+
+            // Iterate through each word
+            unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
+            while (itr == map.end() && !mString.isEnd())
+            {
+                // TODO: REMOVE TEMP.
+                string tmp2 = mString.nextWord();
+                itr = map.find(tmp2);
+            }
+
+            // If candidate is found. Transfer all data from in_cIter to itr.
+            if (itr != map.end() && *itr != *in_cIter)
+            {
+                itr->second->merge(in_cIter->second);
+                isChanged = true;
+            }
+        }
+    }
+
+private:
+    Normalize norm;
+    ParseString mString;
 };
 
 
