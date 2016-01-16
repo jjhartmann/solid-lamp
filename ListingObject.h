@@ -63,6 +63,9 @@ public:
     // Get a copy of the current document
     DocumentMap getCopy();
 
+    // Get a copy of the current document and convert to JSON format. 
+    rapidjson::Document getJSONCopy();
+
 
 private:
     // Private Variables
@@ -266,7 +269,29 @@ DocumentMap ListingObject<T>::getCopy()
     return (mItr->second)->getCopy();
 }
 
+///////////////////////////////////////////////////////////////////////
+template <class T>
+rapidjson::Document ListingObject<T>::getJSONCopy()
+{
+    // JSON Container
+    rapidjson::Document out_d;
+    out_d.SetObject();
 
+    DocumentMap d = mItr->second->getCopy();
+    for (DocumentMap::iterator itr = d.begin(); itr != d.end(); ++itr)
+    {
+        string key = itr->first;
+        string val = itr->second;
+
+        Value v(kStringType);
+        v = StringRef(val.c_str(), val.length());
+        Value k(kStringType);
+        k = StringRef(key.c_str(), key.length());
+        out_d.AddMember(k, v, out_d.GetAllocator());
+    }
+
+    return out_d;
+}
 
 
 #endif //SORTABLECHALLENGEREPO_LISTINGOBJECT_H

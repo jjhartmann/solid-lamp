@@ -68,7 +68,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 d.SetObject();
 
                 Value v(kStringType);
-                //v.SetString(pName, pName.length());
+                v = StringRef(pName.c_str(), pName.length());
 
                 d.AddMember("product_name", v, d.GetAllocator());
 
@@ -84,7 +84,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                     // If match, add to resolved
                     if(res)
                     {
-                        //a.PushBack(mListing.getCopy(), d.GetAllocator());
+                        a.PushBack(mListing.getJSONCopy(), d.GetAllocator());
                     }
                 }
                 while (++mListing); // Next listing in manufacturer group
