@@ -29,7 +29,7 @@ public:
     // Add a document file to the listings object.
     //
     // IN: *in_d         The json object to be added. DON'T OWN
-    void add(rapidjson::Document *in_d);
+    void add(const rapidjson::Document &in_d);
 
     // Invokes a rehashing of the list, performing deduplication.
     void optimize();
@@ -58,10 +58,10 @@ public:
     // Get the value of a Member in the document
     //
     // IN: in_str           The name of the member to get.
-    rapidjson::Value* operator[] (string str);
+    string operator[] (string str);
 
     // Get a copy of the current document
-    rapidjson::Document getCopy();
+    unordered_map<string, string> getCopy();
 
 
 private:
@@ -100,10 +100,10 @@ ListingObject<T>::~ListingObject()
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-void ListingObject<T>::add(rapidjson::Document *in_d)
+void ListingObject<T>::add(const rapidjson::Document &in_d)
 {
     // Determine what manufacturer the document is and place in container
-    Value& v = (*in_d)["manufacturer"];
+    const Value& v = in_d["manufacturer"];
     string res = (*mMMatcher)(v.GetString(), mManufacturerList);
 
     ListingManufacturer *manufacturer = mManufacturerList[res];
@@ -252,7 +252,7 @@ int ListingObject<T>::getManufacturerCount()
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-rapidjson::Value* ListingObject<T>::operator[] (string str)
+string ListingObject<T>::operator[] (string str)
 {
     return (*(mItr->second))[str];
 }
@@ -260,7 +260,7 @@ rapidjson::Value* ListingObject<T>::operator[] (string str)
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-rapidjson::Document ListingObject<T>::getCopy()
+unordered_map<string, string> ListingObject<T>::getCopy()
 {
     return (mItr->second)->getCopy();
 }

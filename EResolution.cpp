@@ -26,25 +26,22 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
     if (!inListingFile) return;
     if (!inProductFile) return;
 
-    // Get json document and build store listings
+    // Get JSON document and build store listings
     string jsonStr;
+    Document d;
     while (getline(inListingFile, jsonStr))
     {
-        Document *d = new Document(); // DON'T OWN
-        d->Parse(jsonStr.c_str());
-
+        d.Parse(jsonStr.c_str());
         mListing.add(d);
     }
 
     // invoke Store listings optimization and deduplication.
     mListing.optimize();
 
-    // Get json document and build the product listings
+    // Get JSON document and build the product listings
     while (getline(inProductFile, jsonStr))
     {
-        Document *d = new Document(); // DON'T OWN
-        d->Parse(jsonStr.c_str());
-
+        d.Parse(jsonStr.c_str());
         mProduct.add(d);
     }
 
@@ -61,33 +58,33 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
         {
             do
             {
-                // Collect information from json object
-                Value *pName = mProduct["product_name"];
-                Value *model = mProduct["model"];
-                Value *family = mProduct["family"];
+                // Collect information from JSON object
+                string pName = mProduct["product_name"];
+                string model = mProduct["model"];
+                string family = mProduct["family"];
 
                 // Document to be used to build listing for product
                 Document d;
                 d.SetObject();
 
                 Value v(kStringType);
-                v.SetString(pName->GetString(), pName->GetStringLength());
+                //v.SetString(pName, pName.length());
 
                 d.AddMember("product_name", v, d.GetAllocator());
 
                 Value a(kArrayType);
 
-                // Iterator throught the product listing for matches.
+                // Iterator through the product listing for matches.
                 do
                 {
                     // Get the title from each listing and compare with product.
-                    Value *title = mListing["title"];
-                    bool res = matcher.match(title->GetString(), model->GetString());
+                    string title = mListing["title"];
+                    bool res = matcher.match(title, model);
 
                     // If match, add to resolved
                     if(res)
                     {
-                        a.PushBack(mListing.getCopy(), d.GetAllocator());
+                        //a.PushBack(mListing.getCopy(), d.GetAllocator());
                     }
                 }
                 while (++mListing); // Next listing in manufacturer group

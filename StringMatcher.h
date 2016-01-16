@@ -262,7 +262,7 @@ public:
         in_cIter->second->resetDocumentItr();
         while (in_cIter->second->isValid())
         {
-            tmpName = (*(in_cIter->second))["title"]->GetString();
+            tmpName = (*(in_cIter->second))["title"];
             norm.processString(tmpName);
             mString.resetString(tmpName);
 
