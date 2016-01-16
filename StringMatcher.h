@@ -49,7 +49,7 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // Process a string and perform normalization
-    void processString(string &in_str)
+    void processString(string &in_str, const bool in_removeInt = false)
     {
         for (int i = 0; i < in_str.length(); ++i)
         {
@@ -63,6 +63,12 @@ public:
                 --i;
             }
 
+            // Remove numbers. 
+            if (in_removeInt && c <=57 & c >=48)
+            {
+                in_str.erase(i, 1);
+                --i;
+            }
         }
     }
 };
@@ -189,7 +195,7 @@ public:
     string operator()(string str, unordered_map<string, ListingManufacturer*> &map)
     {
         // Convert string to lower case
-        norm.processString(str);
+        norm.processString(str, true);
         mString.resetString(str);
 
         unordered_map<string, ListingManufacturer *>::iterator mIter = map.find(str);

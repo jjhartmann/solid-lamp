@@ -52,6 +52,8 @@ unordered_set<string> KB::invalidWordMap =
 {
     "",
     "camera",
+    "digital",
+    "true",
 
 };
 

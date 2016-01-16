@@ -151,18 +151,19 @@ void ListingObject<T>::optimize()
     while (kbitr != KB::invalidWordMap.end())
     {
         bool del = false;
+
+        itr = mManufacturerList.find(*kbitr);
         mMMatcher->removeInvalids(itr, mManufacturerList, del);
 
         if (del)
         {
             // If the manufacturer List is empty or moved. Delete.
             delete itr->second;
-            itr = mManufacturerList.erase(itr);
+            mManufacturerList.erase(itr);
         }
-        else
-        {
-            ++itr;
-        }
+
+
+        ++kbitr;
     }
 }
 
