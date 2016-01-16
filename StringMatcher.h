@@ -25,6 +25,7 @@ public:
     static unordered_map< string, vector<string> > manufacturerMap;
     static unordered_set<char> invalidCharMap;
     static unordered_set<string> ambiguousWordMap;
+    static unordered_set<string> invalidWordMap;
 };
 
 ///////////////////////////////////////////////////////////////

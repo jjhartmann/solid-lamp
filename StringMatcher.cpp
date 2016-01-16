@@ -45,6 +45,16 @@ unordered_set<string> KB::ambiguousWordMap =
     "digital",
 };
 
+
+/////////////////////////////////////////////////////////////
+// Static Invalid Char Map
+unordered_set<string> KB::invalidWordMap =
+{
+    "",
+    "camera",
+
+};
+
 /////////////////////////////////////////////////////////////
 // Static Manufacturer KB MAP
 unordered_map<string, vector<string> > KB::manufacturerMap =
