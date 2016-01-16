@@ -61,7 +61,7 @@ public:
     string operator[] (string str);
 
     // Get a copy of the current document
-    unordered_map<string, string> getCopy();
+    DocumentMap getCopy();
 
 
 private:
@@ -261,7 +261,7 @@ string ListingObject<T>::operator[] (string str)
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-unordered_map<string, string> ListingObject<T>::getCopy()
+DocumentMap ListingObject<T>::getCopy()
 {
     return (mItr->second)->getCopy();
 }

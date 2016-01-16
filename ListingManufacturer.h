@@ -65,8 +65,6 @@ public:
 private:
     // Private Variables
     string mManufacturerName;
-    vector<rapidjson::Document*> mListings; // OWN
-    vector<rapidjson::Document*>::iterator mItr;
 
     vector< DocumentMap* > mMapListings; // OWN
     vector< DocumentMap* >::iterator mMapItr;

@@ -242,9 +242,8 @@ public:
         unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
         while (itr == map.end() && !mString.isEnd())
         {
-            // TODO: REMOVE TEMP.
-            string tmp2 = mString.nextWord();
-            itr = map.find(tmp2);
+            // Get next word and find in the map
+            itr = map.find(mString.nextWord());
         }
 
         // If candidate is found. Transfer all data from in_cIter to itr.
@@ -278,7 +277,7 @@ public:
             string word;
             while (itr == map.end() && !mString.isEnd())
             {
-                // TODO: REMOVE TEMP.
+                // Get next word and find in maps
                 word = mString.nextWord();
 
                 unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
