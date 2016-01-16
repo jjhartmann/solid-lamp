@@ -146,6 +146,24 @@ void ListingObject<T>::optimize()
             ++itr;
         }
     }
+
+    unordered_set<string>::iterator kbitr = KB::invalidWordMap.begin();
+    while (kbitr != KB::invalidWordMap.end())
+    {
+        bool del = false;
+        mMMatcher->removeInvalids(itr, mManufacturerList, del);
+
+        if (del)
+        {
+            // If the manufacturer List is empty or moved. Delete.
+            delete itr->second;
+            itr = mManufacturerList.erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
+    }
 }
 
 

@@ -216,84 +216,92 @@ public:
     }
 
     // Optimize the map with word look-up, deduplication.
-    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, unordered_map<string, ListingManufacturer*> &map, bool &isChanged)
+    void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, 
+                    unordered_map<string, ListingManufacturer*> &map,
+                    bool &isChanged)
     {
         string tmpName = in_cIter->first;
-        if (tmpName == "" || tmpName == "camera")
+
+        // Valid String, can perform bulk move.
+        mString.resetString(tmpName);
+
+        // Iterate through each word
+        unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
+        while (itr == map.end() && !mString.isEnd())
         {
-            // Unknown  manufacturer. Rehash all.
-            in_cIter->second->resetDocumentItr();
-            while (in_cIter->second->isValid())
-            {
-                tmpName = (*(in_cIter->second))["title"]->GetString();
-                norm.processString(tmpName);
-                mString.resetString(tmpName);
-
-                // Iterate through each word
-                unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
-
-                string word;
-                while (itr == map.end() && !mString.isEnd())
-                {
-                    // TODO: REMOVE TEMP.
-                    word = mString.nextWord();
-
-                    unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
-                    if (sitr != KB::ambiguousWordMap.end())
-                    {
-                        // Close the gap.
-                        mString.eraseBeforeAtIndex(-1);
-                    }
-                    else
-                    {
-                        itr = map.find(word);
-                    }
-                }
-
-                // If match, move document to new location
-                if (itr != map.end() && *itr != *in_cIter)
-                {
-                    // Move iterates by one
-                    itr->second->add(in_cIter->second->move());
-                }
-                else
-                {
-                    // Create new listing based on first word.
-                    mString.resetString();
-                    string newManu = mString.nextWord();
-
-                    ListingManufacturer *el = new ListingManufacturer(newManu);
-                    el->add(in_cIter->second->move());
-                    map[newManu] = el;
-                }
-            }
-
-            // Delete manufacturer if empty listing.
-            if(in_cIter->second->isEmpty())
-            {
-                isChanged = true;
-            }
+            // TODO: REMOVE TEMP.
+            string tmp2 = mString.nextWord();
+            itr = map.find(tmp2);
         }
-        else
+
+        // If candidate is found. Transfer all data from in_cIter to itr.
+        if (itr != map.end() && *itr != *in_cIter)
         {
-            // Valid String, can perform bulk move.
+            itr->second->merge(in_cIter->second);
+            isChanged = true;
+        }
+    }
+
+
+    ////////////////////////////////////////////////
+    // Optimize For Invalid Words. 
+    void removeInvalids(unordered_map<string, ListingManufacturer*>::iterator &in_cIter,
+        unordered_map<string, ListingManufacturer*> &map,
+        bool &isChanged)
+    {
+        string tmpName = in_cIter->first;
+
+        // Unknown  manufacturer. Rehash all.
+        in_cIter->second->resetDocumentItr();
+        while (in_cIter->second->isValid())
+        {
+            tmpName = (*(in_cIter->second))["title"]->GetString();
+            norm.processString(tmpName);
             mString.resetString(tmpName);
 
             // Iterate through each word
             unordered_map<string, ListingManufacturer *>::iterator itr = map.end();
+
+            string word;
             while (itr == map.end() && !mString.isEnd())
             {
                 // TODO: REMOVE TEMP.
-                string tmp2 = mString.nextWord();
-                itr = map.find(tmp2);
+                word = mString.nextWord();
+
+                unordered_set<string>::iterator sitr = KB::ambiguousWordMap.find(word);
+                if (sitr != KB::ambiguousWordMap.end())
+                {
+                    // Close the gap.
+                    mString.eraseBeforeAtIndex(-1);
+                }
+                else
+                {
+                    itr = map.find(word);
+                }
             }
 
-            // If candidate is found. Transfer all data from in_cIter to itr.
+            // If match, move document to new location
             if (itr != map.end() && *itr != *in_cIter)
             {
-                itr->second->merge(in_cIter->second);
-                isChanged = true;
+                // Move iterates by one
+                itr->second->add(in_cIter->second->move());
             }
+            else
+            {
+                // Create new listing based on first word.
+                mString.resetString();
+                string newManu = mString.nextWord();
+
+                ListingManufacturer *el = new ListingManufacturer(newManu);
+                el->add(in_cIter->second->move());
+                map[newManu] = el;
+            }
+        }
+
+        // Delete manufacturer if empty listing.
+        if(in_cIter->second->isEmpty())
+        {
+            isChanged = true;
         }
     }
 
