@@ -47,6 +47,7 @@ public:
         return c;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     // Process a string and perform normalization
     void processString(string &in_str)
     {
@@ -71,6 +72,7 @@ class ParseString
 public:
     ParseString() {}
 
+    ////////////////////////////////////////////////////////////////////////////////
     // Find word in list.
     ParseString(string str)
     {
@@ -78,6 +80,7 @@ public:
         mTmpStr = str;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     // Reset values;
     void resetString(string str = "") 
     { 
@@ -88,6 +91,7 @@ public:
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     // Find next word;
     string nextWord()
     {
@@ -109,6 +113,7 @@ public:
         return word;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     // erase at and before index " "
     string eraseBeforeAtIndex(int offset, int len = 1)
     {
@@ -179,6 +184,7 @@ class ManufacturerMatcher
 {
 public:
 
+    ////////////////////////////////////////////////////////////////////////////////
     // Using a KB, look up and match against known manufacturers.
     string operator()(string str, unordered_map<string, ListingManufacturer*> &map)
     {
@@ -215,6 +221,7 @@ public:
         return str;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     // Optimize the map with word look-up, deduplication.
     void operator()(unordered_map<string, ListingManufacturer*>::iterator &in_cIter, 
                     unordered_map<string, ListingManufacturer*> &map,
@@ -243,7 +250,7 @@ public:
     }
 
 
-    ////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
     // Optimize For Invalid Words. 
     void removeInvalids(unordered_map<string, ListingManufacturer*>::iterator &in_cIter,
         unordered_map<string, ListingManufacturer*> &map,
