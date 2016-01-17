@@ -35,26 +35,26 @@ int main() {
 
 
     // Benchmarking for optimised
-    clock_t begin = clock();
+    time_t begin = time(0);
     EResolution resolve(fileListing, fileProduct);
-    clock_t end = clock();
+    time_t end = time(0);
     double optimised = double(end - begin);
 
 
     // Benchmarking for bruteforce
-    begin = clock();
+    begin = time(0);
     EResolution bruteF;
     bruteF.bruteForceProcedure(fileListing, fileProduct);
-    end = clock();
+    end = time(0);
     double bruteforce = double(end - begin);
 
 
     resolve.writeJSON(resultpath);
 
     cout << "~Benchmarking~" << endl;
-    cout << "Optimized Run Time (seconds):\t" << optimised/1000 << endl;
-    cout << "Brute force Run Time (seconds):\t" << bruteforce/1000 << endl;
-    cout << "Oprtimized/Brute Percentage:\t" << optimised / bruteforce << endl;
+    cout << "Optimized Run Time (ms):\t" << optimised * 1000 << endl;
+    cout << "Brute force Run Time (ms):\t" << bruteforce * 1000 << endl;
+    cout << "Optimized/Brute Percentage:\t" << optimised / bruteforce << endl;
 
     return 0;
 }
