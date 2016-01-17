@@ -52,8 +52,9 @@ int main() {
     resolve.writeJSON(resultpath);
 
     cout << "~Benchmarking~" << endl;
-    cout << "Optimized Run Time:\t" << optimised << endl;
-    cout << "Brute force Run Time:\t" << bruteforce << endl;
+    cout << "Optimized Run Time (seconds):\t" << optimised/1000 << endl;
+    cout << "Brute force Run Time (seconds):\t" << bruteforce/1000 << endl;
+    cout << "Oprtimized/Brute Percentage:\t" << optimised / bruteforce << endl;
 
     return 0;
 }
