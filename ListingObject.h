@@ -155,7 +155,9 @@ void ListingObject<T>::optimize()
         bool del = false;
 
         itr = mManufacturerList.find(*kbitr);
-        mMMatcher->removeInvalids(itr, mManufacturerList, del);
+        
+        if (itr != mManufacturerList.end())
+            mMMatcher->removeInvalids(itr, mManufacturerList, del);
 
         if (del)
         {
