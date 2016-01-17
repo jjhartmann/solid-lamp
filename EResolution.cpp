@@ -207,7 +207,18 @@ void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPa
 
     StringMatcher<ProductMatcher> matcher;
 
+    // Brute force extrem N*N
+    for (auto pitem : bruteProduct)
+    {
+        string pmanufacturer = pitem["manufacturer"];
+        string pmodel = pitem["model"];
+        string pfamily = pitem["family"];
 
+        for (auto litem : bruteListings)
+        {
+            
+        }
+    }
 
 
 }
