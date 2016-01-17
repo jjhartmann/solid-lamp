@@ -36,6 +36,10 @@ void ListingManufacturer::add(const rapidjson::Document &in_d)
     {
         string key = itr->name.GetString();
         string val = itr->value.GetString();
+        
+        //// Normalize the value. 
+        //norm.processString(val);
+
         (*item)[key] = val;
     }
 
@@ -48,6 +52,7 @@ void ListingManufacturer::add(const rapidjson::Document &in_d)
 // IN: *in_d        The parsed hash table. OWN.
 void ListingManufacturer::add(DocumentMap *in_d)
 {
+    if (!in_d) return;
     mMapListings.push_back(in_d);
 }
 

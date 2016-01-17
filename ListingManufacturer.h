@@ -68,7 +68,6 @@ private:
 
     vector< DocumentMap* > mMapListings; // OWN
     vector< DocumentMap* >::iterator mMapItr;
-
 };
 
 

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "rapidjson/stringbuffer.h"
+
 using namespace std;
 using namespace rapidjson;
 
@@ -65,7 +67,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 string manufacturer = mProduct.getManufacturerName();
 
                 // Document to be used to build listing for product
-                rapidjson::Document *d;
+                rapidjson::Document *d = nullptr;
                 rapidjson::Value a(kArrayType);
 
                 // Iterator through the product listing for matches.
@@ -85,7 +87,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                             d->SetObject();                               
                         }
 
-                        a.PushBack(mListing.getJSONCopy(), d->GetAllocator());
+                        a.PushBack(mListing.getJSONCopy(d), d->GetAllocator());
                     }
                 }
                 while (++mListing); // Next listing in manufacturer group
@@ -93,19 +95,15 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 // Store documents in result vector
                 if (!a.Empty()) 
                 {
-                    rapidjson::Value v(kStringType);
-                    v = StringRef(pName.c_str(), pName.length());
+                    rapidjson::Value v(pName.c_str(), d->GetAllocator());
 
                     d->AddMember("product_name", v, d->GetAllocator());
                     d->AddMember("listings", a, d->GetAllocator());
 
                     mResolved.push_back(d);
-
                 }
             }
             while (++mProduct); // next product in manufacturer group
-
-
         }
 
         // Go to the next manufacturer
@@ -128,8 +126,18 @@ EResolution::~EResolution()
 
 // Write the entity resolution result to JSON format.
 //
-// IN: in_FileName      the filename of the docuemtn to write.
+// IN: in_FileName      the filename of the documents to write.
 void EResolution::writeJSON()
 {
+    ofstream file;
+    file.open("./data/results.txt");
+    for (auto *d : mResolved)
+    {
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<StringBuffer> writer(buffer);
+        d->Accept(writer);
+        string json(buffer.GetString(), buffer.GetSize());
 
+        file << json << endl;
+    }
 }

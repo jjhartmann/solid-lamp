@@ -34,5 +34,7 @@ int main() {
 
     EResolution resolve(fileListing, fileProduct);
 
+    resolve.writeJSON();
+
     return 0;
 }

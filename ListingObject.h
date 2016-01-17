@@ -64,7 +64,7 @@ public:
     DocumentMap getCopy();
 
     // Get a copy of the current document and convert to JSON format. 
-    rapidjson::Document getJSONCopy();
+    rapidjson::Document getJSONCopy(rapidjson::Document* in_d);
 
 
 private:
@@ -72,7 +72,6 @@ private:
     unordered_map<string, ListingManufacturer*> mManufacturerList;
     unordered_map<string, ListingManufacturer*>::iterator mItr;
     T *mMMatcher; // OWN
-
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -271,7 +270,7 @@ DocumentMap ListingObject<T>::getCopy()
 
 ///////////////////////////////////////////////////////////////////////
 template <class T>
-rapidjson::Document ListingObject<T>::getJSONCopy()
+rapidjson::Document ListingObject<T>::getJSONCopy(rapidjson::Document* in_d)
 {
     // JSON Container
     rapidjson::Document out_d;
@@ -283,11 +282,9 @@ rapidjson::Document ListingObject<T>::getJSONCopy()
         string key = itr->first;
         string val = itr->second;
 
-        Value v(kStringType);
-        v = StringRef(val.c_str(), val.length());
-        Value k(kStringType);
-        k = StringRef(key.c_str(), key.length());
-        out_d.AddMember(k, v, out_d.GetAllocator());
+        Value v(val.c_str(), in_d->GetAllocator());
+        Value k(key.c_str(), in_d->GetAllocator());
+        out_d.AddMember(k, v, in_d->GetAllocator());
     }
 
     return out_d;
