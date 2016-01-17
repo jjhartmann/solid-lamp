@@ -75,7 +75,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 {
                     // Get the title from each listing and compare with product.
                     string title = mListing["title"];
-                    bool res = matcher.match(title, model, manufacturer);
+                    bool res = matcher.match(title, model, family);
 
                     // If match, add to resolved
                     if(res)

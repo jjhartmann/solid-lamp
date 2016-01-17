@@ -329,7 +329,7 @@ private:
 class ProductMatcher
 {
 public:
-    bool operator()(string title, string model, string manufacturer)
+    inline bool operator()(string title, string model, string family)
     {
         // Find the vector in the manufacturer key map. 
         int index = title.find(model, 0);
@@ -338,8 +338,17 @@ public:
             return false;
 
         // If index - -1 is not ' ', then return false
-        if (index > 0)
-            return title[index - 1] == ' ';
+        if (index > 0 && title[index - 1] != ' ')
+            return false;
+
+
+        // Check family
+        if (!family.empty())
+        {
+            index = title.find(family, 0);
+            if (index == string::npos)
+                return false;
+        }
 
         return true;
     }
