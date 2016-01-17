@@ -65,14 +65,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 string manufacturer = mProduct.getManufacturerName();
 
                 // Document to be used to build listing for product
-                rapidjson::Document *d = new Document();
-                d->SetObject();
-
-                rapidjson::Value v(kStringType);
-                v = StringRef(pName.c_str(), pName.length());
-
-                d->AddMember("product_name", v, d->GetAllocator());
-
+                rapidjson::Document *d;
                 rapidjson::Value a(kArrayType);
 
                 // Iterator through the product listing for matches.
@@ -85,6 +78,13 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                     // If match, add to resolved
                     if(res)
                     {
+                        // Allocate the document if not alread done so.
+                        if (!d)
+                        {
+                            d = new Document();
+                            d->SetObject();                               
+                        }
+
                         a.PushBack(mListing.getJSONCopy(), d->GetAllocator());
                     }
                 }
@@ -93,7 +93,12 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 // Store documents in result vector
                 if (!a.Empty()) 
                 {
+                    rapidjson::Value v(kStringType);
+                    v = StringRef(pName.c_str(), pName.length());
+
+                    d->AddMember("product_name", v, d->GetAllocator());
                     d->AddMember("listings", a, d->GetAllocator());
+
                     mResolved.push_back(d);
 
                 }
