@@ -205,7 +205,7 @@ void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPa
     }
 
 
-    StringMatcher<ProductMatcher> matcher;
+    StringMatcher<BruteMatcher> matcher;
 
     // Brute force extrem N*N
     for (auto pitem : bruteProduct)
@@ -213,12 +213,26 @@ void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPa
         string pmanufacturer = pitem["manufacturer"];
         string pmodel = pitem["model"];
         string pfamily = pitem["family"];
+        string pName = pitem["product_name"];
+
+        vector< unordered_map<string, string> > vec;
 
         for (auto litem : bruteListings)
         {
-            
+            string lmanufacturer = litem["manufacturer"];
+            string ltitle = litem["title"];
+
+            bool res = matcher.brutematch(ltitle, lmanufacturer, pmodel, pfamily, pmanufacturer);
+
+            if (res)
+            {
+                vec.push_back(litem);
+            }
+        }
+
+        if (!vec.empty())
+        {
+            bruteResolved.push_back(pair<string, vector< unordered_map<string, string> >>(pName, vec));
         }
     }
-
-
 }

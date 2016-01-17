@@ -46,8 +46,14 @@ int main() {
     EResolution bruteF;
     bruteF.bruteForceProcedure(fileListing, fileProduct);
     end = clock();
+    double bruteforce = double(end - begin);
+
 
     resolve.writeJSON(resultpath);
+
+    cout << "~Benchmarking~" << endl;
+    cout << "Optimized Run Time:\t" << optimised << endl;
+    cout << "Brute force Run Time:\t" << bruteforce << endl;
 
     return 0;
 }

@@ -55,6 +55,7 @@ private:
     // For Brute Force
     vector< unordered_map<string, string> > bruteListings;
     vector< unordered_map<string, string> > bruteProduct;
+    vector < pair<string, vector< unordered_map<string, string> > > > bruteResolved;
 };
 
 
