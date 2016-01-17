@@ -173,7 +173,7 @@ void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPa
             string val = itr->value.GetString();
 
             // Normalize the value. 
-            if (key == "title" || key == "model" || key == "family")
+            if (key == "title" || key == "model" || key == "family" || key == "manufacturer")
                 norm.processString(val);
 
             item[key] = val;
@@ -195,7 +195,7 @@ void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPa
             string val = itr->value.GetString();
 
             // Normalize the value. 
-            if (key == "title" || key == "model" || key == "family")
+            if (key == "title" || key == "model" || key == "family" || key == "manufacturer")
                 norm.processString(val);
 
             item[key] = val;
@@ -203,4 +203,11 @@ void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPa
 
         bruteProduct.push_back(item);
     }
+
+
+    StringMatcher<ProductMatcher> matcher;
+
+
+
+
 }

@@ -178,6 +178,12 @@ public:
         return mMatcher(in_str1, in_str2, in_str3);
     }
 
+    // Brute Force match
+    bool brutematch(string in_str1, string in_str2, string in_str3, string in_str4, string in_str5)
+    {
+        return mMatcher(in_str1, in_str2, in_str3, in_str4, in_str5);
+    }
+
 private:
     FuncType mMatcher;
 };
@@ -353,5 +359,55 @@ public:
         return true;
     }
 };
+
+
+///////////////////////////////////////////////////////////////
+// Functor: Manufacturer Matching
+///////////////////////////////////////////////////////////////
+class BruteMatcher
+{
+public:
+    inline bool operator() (string s1, string s2, string s3)
+    {
+        return false;
+    }
+
+    // Brute Force Match
+    inline bool operator()(
+        string title,
+        string lmanfacturer,
+        string model,
+        string family,
+        string pmanufacturer)
+    {
+        // Find the vector in the manufacturer key map. 
+        int index = title.find(model, 0);
+
+        if (index == string::npos)
+            return false;
+
+        // If index - -1 is not ' ', then return false
+        if (index > 0 && title[index - 1] != ' ')
+            return false;
+
+        // Check the manufacturer
+        index = lmanfacturer.find(pmanufacturer);
+
+        if (index == string::npos)
+            return false;
+
+        // Check family
+        if (!family.empty())
+        {
+            index = title.find(family, 0);
+            if (index == string::npos)
+                return false;
+        }
+
+        return true;
+    }
+
+};
+
 
 #endif //SORTABLECHALLENGEREPO_STRINGMATCHER_H
