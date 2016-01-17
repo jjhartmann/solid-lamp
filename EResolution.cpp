@@ -141,3 +141,14 @@ void EResolution::writeJSON(string in_path)
         file << json << endl;
     }
 }
+
+
+// Process the entity resolution using brute force with no optimization
+//
+// IN: in_path      takes a path to the product data file.
+// IN: in_path      takes a path to the listings data file.
+//
+void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPath)
+{
+
+}

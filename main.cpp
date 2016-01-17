@@ -2,7 +2,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
-#include <iostream>
+#include <ctime>
 
 #include "EResolution.h"
 
@@ -33,7 +33,20 @@ int main() {
         cin >> resultpath;
     }
 
+
+    // Benchmarking for optimised
+    clock_t begin = clock();
     EResolution resolve(fileListing, fileProduct);
+    clock_t end = clock();
+    double optimised = double(end - begin);
+
+
+    // Benchmarking for bruteforce
+    begin = clock();
+    EResolution bruteF;
+    bruteF.bruteForceProcedure(fileListing, fileProduct);
+    end = clock();
+
     resolve.writeJSON(resultpath);
 
     return 0;

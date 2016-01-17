@@ -20,6 +20,12 @@ using namespace std;
 class EResolution
 {
 public:
+    // Defualt constructor
+    EResolution() 
+    {
+        ; // Do nothing.
+    }
+
     // Builds and parses the product file into a data structure
     //
     // IN: in_path      takes a path to the product data file.
@@ -28,6 +34,13 @@ public:
     EResolution(string in_ListingPath, string in_ProductPath);
 
     ~EResolution();
+
+    // Process the entity resolution using brute force with no optimization
+    //
+    // IN: in_path      takes a path to the product data file.
+    // IN: in_path      takes a path to the listings data file.
+    //
+    void bruteForceProcedure(string in_ListingPath, string in_ProductPath);
 
     // Write the entity resolution result to JSON format.
     //
