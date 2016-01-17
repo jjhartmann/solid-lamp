@@ -3,6 +3,7 @@
 ///////////////////////////////////////////////////////////////
 
 #include "ListingManufacturer.h"
+#include "StringMatcher.h"
 
 using namespace std;
 
@@ -31,14 +32,16 @@ ListingManufacturer::~ListingManufacturer()
 // IN: *in_d        JSON object to add. OWN
 void ListingManufacturer::add(const rapidjson::Document &in_d)
 {
+    Normalize norm;
     unordered_map<string, string> *item = new unordered_map<string, string>(); // OWN
     for (rapidjson::Value::ConstMemberIterator itr = in_d.MemberBegin(); itr != in_d.MemberEnd(); itr++)
     {
         string key = itr->name.GetString();
         string val = itr->value.GetString();
         
-        //// Normalize the value. 
-        //norm.processString(val);
+        // Normalize the value. 
+        if (key == "title" || key == "model" || key == "family")
+            norm.processString(val);
 
         (*item)[key] = val;
     }
