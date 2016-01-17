@@ -173,9 +173,9 @@ public:
         ;
     }
 
-    bool match(string str1, string str2)
+    bool match(string in_str1, string in_str2, string in_str3)
     {
-        return mMatcher(str1, str2);
+        return mMatcher(in_str1, in_str2, in_str3);
     }
 
 private:
@@ -329,9 +329,11 @@ private:
 class ProductMatcher
 {
 public:
-    bool operator()(string str1, string str2)
+    bool operator()(string title, string model, string manufacturer)
     {
-        return str1 == str2;
+        // Find the vector in the manufacturer key map. 
+        int index = title.find(model, 0);
+        return index != string::npos;
     }
 };
 

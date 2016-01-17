@@ -54,6 +54,8 @@ unordered_set<string> KB::invalidWordMap =
     "camera",
     "digital",
     "true",
+    "budget hd camcorder",
+
 
 };
 
@@ -77,9 +79,10 @@ unordered_map<string, vector<string> > KB::manufacturerMap =
                 {"ricoh",       {"ricoh",}},
                 {"leica",       {"leica", }},
                 {"olympus",     {"olympus", }},
-                {"hp",          {"hp", "h-p", "hewlett packard", "hewlettpackard"}},
+                {"hp",          {"hp", "h-p", "hewlett packard", "hewlettpackard", "hewlett packard gmbg", }},
                 {"sony",        {"sony", "sony mobile", "sony computer"}},
                 {"kodak",       {"kodak", "kodak film"}},
                 {"nikon",       {"nikon", }},
-                {"toshiba",       {"toshiba", }},
+                {"toshiba",     {"toshiba", }},
+                { "ge",    { "general electric", } },
         };
