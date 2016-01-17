@@ -150,5 +150,57 @@ void EResolution::writeJSON(string in_path)
 //
 void EResolution::bruteForceProcedure(string in_ListingPath, string in_ProductPath)
 {
+    // Get and load the files into a buffer stream.
+    ifstream inListingFile(in_ListingPath.c_str(), ifstream::in);
+    ifstream inProductFile(in_ProductPath.c_str(), ifstream::in);
 
+    if (!inListingFile) return;
+    if (!inProductFile) return;
+
+    // Get JSON document and build store listings
+    string jsonStr;
+    Document d;
+    Normalize norm;
+    while (getline(inListingFile, jsonStr))
+    {
+        d.Parse(jsonStr.c_str());
+
+        unordered_map<string, string> item;
+
+        for (rapidjson::Value::ConstMemberIterator itr = d.MemberBegin(); itr != d.MemberEnd(); itr++)
+        {
+            string key = itr->name.GetString();
+            string val = itr->value.GetString();
+
+            // Normalize the value. 
+            if (key == "title" || key == "model" || key == "family")
+                norm.processString(val);
+
+            item[key] = val;
+        }
+
+        bruteListings.push_back(item);
+    }
+
+    // Get JSON document and build the product listings
+    while (getline(inProductFile, jsonStr))
+    {
+        d.Parse(jsonStr.c_str());
+
+        unordered_map<string, string> item;
+
+        for (rapidjson::Value::ConstMemberIterator itr = d.MemberBegin(); itr != d.MemberEnd(); itr++)
+        {
+            string key = itr->name.GetString();
+            string val = itr->value.GetString();
+
+            // Normalize the value. 
+            if (key == "title" || key == "model" || key == "family")
+                norm.processString(val);
+
+            item[key] = val;
+        }
+
+        bruteProduct.push_back(item);
+    }
 }

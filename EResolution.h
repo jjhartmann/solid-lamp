@@ -51,6 +51,10 @@ private:
     vector<rapidjson::Document*> mResolved; // OWN
     ListingObject<ManufacturerMatcher> mListing;
     ListingObject<ManufacturerMatcher> mProduct;
+
+    // For Brute Force
+    vector< unordered_map<string, string> > bruteListings;
+    vector< unordered_map<string, string> > bruteProduct;
 };
 
 
