@@ -33,9 +33,16 @@ int main() {
         cin >> resultpath;
     }
 
+    cout << "Product list input path:\t" << fileProduct << endl;
+    cout << "Store listings input path:\t" << fileListing << endl;
+    cout << "Output file path:\t" << resultpath << endl;
+    cout << "Begin..." << endl;
+
     EResolution resolve(fileListing, fileProduct);
 
+    cout << "Writing output file." << endl;
     resolve.writeJSON(resultpath);
 
+    cout << "...End." << endl;
     return 0;
 }

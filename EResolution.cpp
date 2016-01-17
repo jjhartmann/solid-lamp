@@ -25,8 +25,16 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
     ifstream inListingFile(in_ListingPath.c_str(), ifstream::in);
     ifstream inProductFile(in_ProductPath.c_str(), ifstream::in);
 
-    if (!inListingFile) return;
-    if (!inProductFile) return;
+    if (!inListingFile) 
+    { 
+        cout << "\n****Invalid Listings File Path.*****\n" << endl;
+        return; 
+    }
+    if (!inProductFile)
+    {
+        cout << "\n****Invalid Prodcut File Path.*****\n" << endl;
+        return;
+    }
 
     // Get JSON document and build store listings
     string jsonStr;
@@ -37,6 +45,8 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
         mListing.add(d);
     }
 
+    inListingFile.close();
+
     // invoke Store listings optimization and deduplication.
     mListing.optimize();
 
@@ -46,6 +56,8 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
         d.Parse(jsonStr.c_str());
         mProduct.add(d);
     }
+
+    inProductFile.close();
 
     // Initiate Entity Resolution.
     StringMatcher<ProductMatcher> matcher;
@@ -131,6 +143,13 @@ void EResolution::writeJSON(string in_path)
 {
     ofstream file;
     file.open(in_path);
+
+    if (!file)
+    {
+        cout << "\n****Invalid Output File Path.*****\n" << endl;
+        return;
+    }
+
     for (auto *d : mResolved)
     {
         rapidjson::StringBuffer buffer;
@@ -140,4 +159,6 @@ void EResolution::writeJSON(string in_path)
 
         file << json << endl;
     }
+
+    file.close();
 }
