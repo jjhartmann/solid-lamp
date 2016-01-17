@@ -333,7 +333,15 @@ public:
     {
         // Find the vector in the manufacturer key map. 
         int index = title.find(model, 0);
-        return index != string::npos;
+
+        if (index == string::npos)
+            return false;
+
+        // If index - -1 is not ' ', then return false
+        if (index > 0)
+            return title[index - 1] == ' ';
+
+        return true;
     }
 };
 
