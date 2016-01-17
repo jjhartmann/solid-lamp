@@ -62,34 +62,45 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                 string pName = mProduct["product_name"];
                 string model = mProduct["model"];
                 string family = mProduct["family"];
+                string manufacturer = mProduct.getManufacturerName();
 
                 // Document to be used to build listing for product
-                Document d;
-                d.SetObject();
+                rapidjson::Document *d = new Document();
+                d->SetObject();
 
-                Value v(kStringType);
+                rapidjson::Value v(kStringType);
                 v = StringRef(pName.c_str(), pName.length());
 
-                d.AddMember("product_name", v, d.GetAllocator());
+                d->AddMember("product_name", v, d->GetAllocator());
 
-                Value a(kArrayType);
+                rapidjson::Value a(kArrayType);
 
                 // Iterator through the product listing for matches.
                 do
                 {
                     // Get the title from each listing and compare with product.
                     string title = mListing["title"];
-                    bool res = matcher.match(title, model);
+                    bool res = matcher.match(title, model, manufacturer);
 
                     // If match, add to resolved
                     if(res)
                     {
-                        a.PushBack(mListing.getJSONCopy(), d.GetAllocator());
+                        a.PushBack(mListing.getJSONCopy(), d->GetAllocator());
                     }
                 }
                 while (++mListing); // Next listing in manufacturer group
+
+                // Store documents in result vector
+                if (!a.Empty()) 
+                {
+                    d->AddMember("listings", a, d->GetAllocator());
+                    mResolved.push_back(d);
+
+                }
             }
             while (++mProduct); // next product in manufacturer group
+
+
         }
 
         // Go to the next manufacturer
@@ -101,7 +112,7 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
 // Deconstructor
 EResolution::~EResolution()
 {
-    for (Document *d : mResolved)
+    for (rapidjson::Document *d : mResolved)
     {
         if (d)
         {
