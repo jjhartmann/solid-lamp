@@ -32,7 +32,7 @@ public:
     // Write the entity resolution result to JSON format.
     //
     // IN: in_FileName      the filename of the document to write.
-    void writeJSON();
+    void writeJSON(string in_path = "./data/results.txt");
 
 private:
     vector<rapidjson::Document*> mResolved; // OWN

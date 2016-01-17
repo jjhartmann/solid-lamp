@@ -19,7 +19,7 @@ using namespace rapidjson;
 //
 EResolution::EResolution(string in_ListingPath, string in_ProductPath)
 {
-    cout << in_ListingPath << endl;
+    //cout << in_ListingPath << endl;
 
     // Get and load the files into a buffer stream.
     ifstream inListingFile(in_ListingPath.c_str(), ifstream::in);
@@ -127,10 +127,10 @@ EResolution::~EResolution()
 // Write the entity resolution result to JSON format.
 //
 // IN: in_FileName      the filename of the documents to write.
-void EResolution::writeJSON()
+void EResolution::writeJSON(string in_path)
 {
     ofstream file;
-    file.open("./data/results.txt");
+    file.open(in_path);
     for (auto *d : mResolved)
     {
         rapidjson::StringBuffer buffer;
