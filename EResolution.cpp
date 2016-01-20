@@ -92,13 +92,14 @@ EResolution::EResolution(string in_ListingPath, string in_ProductPath)
                     // If match, add to resolved
                     if(res)
                     {
-                        // Allocate the document if not alread done so.
+                        // Allocate the document if not already done so.
                         if (!d)
                         {
                             d = new Document();
                             d->SetObject();                               
                         }
 
+                        // Get copy of JSON listing object and add to resolved list. 
                         a.PushBack(mListing.getJSONCopy(d), d->GetAllocator());
                     }
                 }

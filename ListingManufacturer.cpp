@@ -38,6 +38,10 @@ void ListingManufacturer::add(const rapidjson::Document &in_d)
     {
         string key = itr->name.GetString();
         string val = itr->value.GetString();
+
+        // Add const_title, will not change. 
+        if (key == "title")
+            (*item)["const_title"] = val;
         
         // Normalize the value. 
         if (key == "title" || key == "model" || key == "family")
@@ -46,6 +50,7 @@ void ListingManufacturer::add(const rapidjson::Document &in_d)
         (*item)[key] = val;
     }
 
+    // Push the item on Listings. 
     mMapListings.push_back(item);
 }
 

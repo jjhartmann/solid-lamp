@@ -284,6 +284,14 @@ rapidjson::Document ListingObject<T>::getJSONCopy(rapidjson::Document* in_d)
         string key = itr->first;
         string val = itr->second;
 
+        // Only want the const_title, unaltered. 
+        if (key == "title")
+            continue;
+
+        // Change const_title, back to title.
+        if (key == "const_title")
+            key = "title";
+
         Value v(val.c_str(), in_d->GetAllocator());
         Value k(key.c_str(), in_d->GetAllocator());
         out_d.AddMember(k, v, in_d->GetAllocator());
