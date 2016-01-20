@@ -35,7 +35,7 @@ int main() {
 
     cout << "Product list input path:\t" << fileProduct << endl;
     cout << "Store listings input path:\t" << fileListing << endl;
-    cout << "Output file path:\t" << resultpath << endl;
+    cout << "Output file path:\t\t" << resultpath << endl;
     cout << "Begin..." << endl;
 
     EResolution resolve(fileListing, fileProduct);
