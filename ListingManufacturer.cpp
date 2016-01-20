@@ -33,7 +33,7 @@ ListingManufacturer::~ListingManufacturer()
 void ListingManufacturer::add(const rapidjson::Document &in_d)
 {
     Normalize norm;
-    unordered_map<string, string> *item = new unordered_map<string, string>(); // OWN
+    DocumentMap *item = new DocumentMap(); // OWN
     for (rapidjson::Value::ConstMemberIterator itr = in_d.MemberBegin(); itr != in_d.MemberEnd(); itr++)
     {
         string key = itr->name.GetString();
@@ -64,7 +64,7 @@ void ListingManufacturer::add(DocumentMap *in_d)
 // IN: in_memberName        THe name of the member to retrieve.
 string ListingManufacturer::operator[](const string in_memberName)
 {
-    unordered_map<string, string> item = **mMapItr;
+    DocumentMap item = **mMapItr;
     return item[in_memberName];
 }
 
