@@ -17,7 +17,7 @@ ListingManufacturer::ListingManufacturer(string in_manName) :
 ListingManufacturer::~ListingManufacturer()
 {
 
-    for (unordered_map<string, string> *itm : mMapListings)
+    for (DocumentMap *itm : mMapListings)
     {
         if (itm)
         {
