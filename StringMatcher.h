@@ -173,7 +173,7 @@ public:
         ;
     }
 
-    bool match(string in_str1, string in_str2, string in_str3)
+    inline bool match(string in_str1, string in_str2, string in_str3)
     {
         return mMatcher(in_str1, in_str2, in_str3);
     }
@@ -339,6 +339,12 @@ public:
 
         // If index - -1 is not ' ', then return false
         if (index > 0 && title[index - 1] != ' ')
+            return false;
+
+        int i = index + model.length();
+        if (i < title.length() - 1 &&
+            (title[i] >= '0') &&
+            (title[i] <= '9'))
             return false;
 
 
